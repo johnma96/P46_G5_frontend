@@ -1,12 +1,12 @@
 <template>
   <div id="app" class="app">
     <div class="header">
-      <h1>Pruebas Covid<br />MT2021-P46</h1>
+      <h1>Bienvenido al portal de Pruebas Covid 19</h1>
       <nav>
         <button v-if="isAuth"> Inicio </button>
         <button v-if="isAuth"> Cuenta </button>
         <button v-if="isAuth"> Cerrar Sesión </button>
-        <button v-if="!isAuth" v-on:click="loadLogIn"> Iniciar Sesión </button>
+        <button v-if="!isAuth" v-on:click="loadLogIn"> Iniciar sesión </button>
         <button v-if="!isAuth" v-on:click="loadSignUp"> Registrarse </button>
       </nav>
     </div>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="footer">
-      <h2>MisionTic 2022 - P46 Grupo 5</h2>
+      <h4>MisionTIC 2022 - P46 Grupo 5   <br>  Mario Montoya - Laura Roa - Jose Orrego - Karen Avila - Juan Alzate </h4>
     </div>
   </div>
 
@@ -75,14 +75,14 @@
     width: 100%;
     height: 10vh;
     min-height: 100px;
-    background-color: #283747 ;
-    color:#E5E7E9 ;
+    background-color: #1c819b;
+    color:#ffffff ;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   .header h1{
-    width: 20%;
+    width: 80%;
     text-align: center;
   }
   .header nav {
@@ -109,7 +109,7 @@
     height: 75vh;
     margin: 0%;
     padding: 0%;
-    background: #FDFEFE ;
+    background: #acacac ;
     align-content: center;
   }
   .footer{
@@ -117,15 +117,15 @@
     padding: 0;
     width: 100%;
     height: 10vh;
-    min-height: 100px;
-    background-color: #283747;
-    color: #E5E7E9;
+    min-height: 20px;
+    background-color: #313131;
+    color: #ffffff;
   }
-  .footer h2{
+  .footer h4{
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
   }
 </style>
