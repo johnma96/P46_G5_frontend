@@ -8,6 +8,7 @@
         <button v-if="isAuth"> Cerrar Sesión </button>
         <button v-if="!isAuth" v-on:click="loadLogIn"> Iniciar sesión </button>
         <button v-if="!isAuth" v-on:click="loadSignUp"> Registrarse </button>
+        <button v-if="!isAuth" v-on:click="loadCreateDep"> Agregar departamento </button>
       </nav>
     </div>
 
@@ -15,6 +16,7 @@
       <router-view
         v-on:completedLogIn="completedLogIn"
         v-on:completedSignUp="completedSignUp"
+        v-on:completedCreateDep="completedCreateDep"
       >
       </router-view>
     </div>
@@ -42,20 +44,21 @@
         if(this.isAuth == false){
           this.$router.push({name: "login"})
         }
-        
-      },
-      
+      },  
       loadLogIn: function(){
         this.$router.push({name: "login"})
       },
       loadSignUp: function(){
         this.$router.push({name: "signUp"})
       },
+      loadCreateDep: function(){
+        this.$router.push({name: "createDep"})
+      },
       completedLogIn: function(data){
-      
       },
       completedSignUp: function(data){
-    
+      },
+      completedCreateDep: function(data){
       },
     },
     created: function(){

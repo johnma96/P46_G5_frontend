@@ -21,8 +21,8 @@
                 <br>
                 <input type="number" min="0" v-model="user.prueba.indeterminateTests" placeholder="Pruebas indeterminadas">
                 <br>
-                <input type="number" min="0" v-model="user.prueba.totalTests" placeholder="Total pruebas">
-                <br>
+                <!-- <input type="number" min="0" v-model="user.prueba.totalTests" placeholder="Total pruebas">
+                <br> -->
                 <button type="submit">Registrar pruebas</button>
             </form>
         </div>
