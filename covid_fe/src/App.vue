@@ -3,12 +3,13 @@
     <div class="header">
       <h1>Bienvenido al portal de Pruebas Covid 19</h1>
       <nav>
-        <button v-if="isAuth"> Inicio </button>
-        <button v-if="isAuth"> Cuenta </button>
-        <button v-if="isAuth"> Cerrar Sesión </button>
+        <button v-if="isAuth" v-on:click="loadHome"> Inicio </button>
+        <button v-if="isAuth" v-on:click="loadAccount"> Cuenta </button>
+        <button v-if="isAuth" v-on:click="loadOut"> Cerrar Sesión </button>
+
         <button v-if="!isAuth" v-on:click="loadLogIn"> Iniciar sesión </button>
         <button v-if="!isAuth" v-on:click="loadSignUp"> Registrarse </button>
-        <button v-if="!isAuth" v-on:click="loadCreateDep"> Agregar departamento </button>
+        <!-- <button v-if="isAuth" v-on:click="loadCreateDep"> Agregar departamento </button> -->
       </nav>
     </div>
 
@@ -16,7 +17,7 @@
       <router-view
         v-on:completedLogIn="completedLogIn"
         v-on:completedSignUp="completedSignUp"
-        v-on:completedCreateDep="completedCreateDep"
+        v-on:logOut="logOut"
       >
       </router-view>
     </div>
@@ -52,7 +53,18 @@
         
       },
 
-       loadHome: function(){
+      loadAccount: function(){
+        this.$router.push({name: "account"});
+      },
+
+      loadOut: function(){
+        localStorage.clear();
+        alert("Sesión terminada");
+        this.verifyAuth();
+
+      },
+
+      loadHome: function(){
         this.$router.push({name: "home"});
       },
       
