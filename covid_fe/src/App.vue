@@ -20,11 +20,11 @@
     </div>
 
     <div class="footer">
-      <h4>MisionTIC 2022 - P46 Grupo 5   <br>  Mario Montoya - Laura Roa - Jose Orrego - Karen Avila - Juan Alzate </h4>
+      <h4>MisionTIC 2022 - P46 Grupo 5   <br>  Mario Montoya - Laura Roa</h4>
     </div>
   </div>
-
 </template>
+
 
 <script>
   export default{
@@ -34,30 +34,48 @@
         isAuth: false
       }
     },
+
     components:{
     },
+
     methods:{
       verifyAuth: function(){
         this.isAuth = localStorage.getItem("isAuth") || false;
         if(this.isAuth == false){
           this.$router.push({name: "login"})
         }
+        else{
+          this.$router.push({name: "home"});
+        }
         
+      },
+
+       loadHome: function(){
+        this.$router.push({name: "home"});
       },
       
       loadLogIn: function(){
-        this.$router.push({name: "login"})
+        this.$router.push({name: "login"});
       },
+
       loadSignUp: function(){
-        this.$router.push({name: "signUp"})
+        this.$router.push({name: "signUp"});
       },
+
       completedLogIn: function(data){
-      
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('tokenRefresh', data.tokenRefresh);
+        localStorage.setItem('tokenAccess', data.tokenAccess);
+        localStorage.setItem('isAuth', true);
+        alert("Autenticación exitosa");
+        this.verifyAuth();
       },
+
       completedSignUp: function(data){
     
       },
     },
+    
     created: function(){
       this.verifyAuth();
     }
