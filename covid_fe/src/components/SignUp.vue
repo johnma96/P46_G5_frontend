@@ -2,7 +2,7 @@
     <div class="signUpUser">
         <div class="containerSignUpUser">
             <h4>A continuación, registrese usando una IPS y un departamento. <br> Posteriormente ingrese los datos de las pruebas Covid19 procesadas en una fecha.</h4>
-            <form v-on:submit.prevent="processSignUp" >
+            <form v-on:submit.prevent="processSignUp" method="POST">
                 <input type="text" v-model="user.username" placeholder="Usuario">
                 <br>
                 <input type="text" v-model="user.name" placeholder="IPS - Departamento (Ej: Salud total - Cundinamarca)">
@@ -21,8 +21,6 @@
                 <br>
                 <input type="number" min="0" v-model="user.prueba.indeterminateTests" placeholder="Pruebas indeterminadas">
                 <br>
-                <input type="number" min="0" v-model="user.prueba.totalTests" placeholder="Total pruebas">
-                <br>
                 <button type="submit">Registrar pruebas</button>
             </form>
         </div>
@@ -33,6 +31,7 @@
     import axios from 'axios';
     export default {
         name: "SignUp",
+
         data: function(){
             return {
                 user: {
@@ -42,15 +41,15 @@
                     departamento: "",
                     ips: "",
                     prueba: {
-                        testDate               : "",
+                        testDate               : (new Date()).toJSON().toString(),
                         positiveTests          : "",
                         negativeTests          : "",
                         indeterminateTests     : "",
-                        totalTests             : ""
                     }
                 }
             }
         },
+
         methods: {
             processSignUp: function(){
                 console.log(this.user);

@@ -72,10 +72,11 @@
       },
 
       completedSignUp: function(data){
-    
+        alert("Registro exitoso");
+        this.completedLogIn(data);
       },
     },
-    
+
     created: function(){
       this.verifyAuth();
     }
