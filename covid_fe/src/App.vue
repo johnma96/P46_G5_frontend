@@ -241,14 +241,16 @@
     position: relative;
   }
   .header h1{
-    width: 100%;
+    width: 80%;
     text-align: center;
     align-items: center;
-    padding: 0.5% 0 0 14%;
+    padding: 0 0 0 19%;
+    position: relative;
+    bottom: 20%;
   }
   .header nav {
     height: 100%;
-    width: 20%;
+    width: 25%;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -261,6 +263,7 @@
     border-radius: 5px;
     padding: 10px 20px;
     margin: 5px;
+    font-size: 18px;
   }
   .header nav button:hover{
     color: #283747;
@@ -276,11 +279,20 @@
     background: #acacac ;
     align-content: center;
   }
+
+  .containerLoginUser form input{
+    font-size: 20px;
+  }
+
+  .containerLoginUser form button{
+    font-size: 20px;
+  }
+
   .footer{
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 10vh;
+    height: 15vh;
     min-height: 20px;
     background-color: #313131;
     color: #ffffff;
@@ -310,7 +322,7 @@
     height: 36px;
     text-align: center;
     vertical-align: middle;
-    font-size:20px;
+    font-size:25px;
   }
 
   .main-menu:hover,nav.main-menu.expanded {
@@ -320,11 +332,12 @@
 
   .main-menu {
     background:#313131;
-    border-right:1px solid #e5e5e5;
+    border-right:1px solid #313131;
+    border-bottom: 1px solid #313131;
     position:absolute;
     top:0;
     bottom:0;
-    height:85.5%;
+    height:100%;
     left:0;
     width:60px;
     overflow:hidden;
@@ -351,7 +364,7 @@
     border-spacing:0;
     color:#999;
     font-family: arial;
-    font-size: 14px;
+    font-size: 18px;
     text-decoration:none;
     -webkit-transform:translateZ(0) scale(1,1);
     -webkit-transition:all .1s linear;
@@ -365,7 +378,7 @@
     height:36px;
     text-align:center;
     vertical-align:middle;
-    font-size:18px;
+    font-size:40px;
   }
 
   .main-menu .nav-text {
@@ -427,4 +440,14 @@
     font-weight: 300;
     src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
   }  
+
+  body {
+    width: 100%;
+    font: 1.6rem/1.25 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #4d4d4d;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  }
+
 </style>
