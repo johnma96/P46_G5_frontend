@@ -19,6 +19,7 @@
         v-on:completedLogIn="completedLogIn"
         v-on:completedSignUp="completedSignUp"
         v-on:completedCreateDep="completedCreateDep"
+        v-on:completedCreateIps="completedCreateIps"
         v-on:logOut="logOut"
       >
       </router-view>
@@ -32,15 +33,15 @@
             <a>
               <i class="fa fa-home fa-2x" ></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadCreateDep">
-                Dashboard
+                Crear Departamento
               </span>
             </a>
 
           </li>
           <li class="has-subnav">
             <a>
-              <i class="fa fa-laptop fa-2x"></i>
-              <span class="nav-text">
+              <i class="fa fa-laptop fa-2x" ></i>
+              <span class="nav-text" v-if="isAuth" v-on:click="loadCreateIps">
                 Stars Components
               </span>
             </a>
@@ -169,6 +170,10 @@
         this.$router.push({name: "createDep"});
       },
 
+      loadCreateIps: function(){
+        this.$router.push({name: "createIps"});
+      },
+
       completedLogIn: function(data){
         localStorage.setItem('username', data.username);
         localStorage.setItem('tokenRefresh', data.tokenRefresh);
@@ -184,6 +189,10 @@
       },
 
        completedCreateDep: function(){
+        alert("Registro exitoso");
+      },
+
+       completedCreateIps: function(){
         alert("Registro exitoso");
       },
     },

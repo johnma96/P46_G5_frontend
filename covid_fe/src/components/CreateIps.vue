@@ -1,10 +1,10 @@
 <template>
-    <div class="createDepUser">
-        <div class="containerCreateDepUser">
-            <h4>A continuación, ingrese un nuevo departamento.</h4>
-            <form v-on:submit.prevent="processCreateDep">
-                <input type="text" v-model="user.name" placeholder="Departamento">
-                <button type="submit">Agregar departamento</button>
+    <div class="createIps">
+        <div class="containerCreateIps">
+            <h4>A continuación, ingrese una nueva IPS.</h4>
+            <form v-on:submit.prevent="processCreateIps">
+                <input type="text" v-model="user.name" placeholder="IPS">
+                <button type="submit">Agregar IPS</button>
             </form>
         </div>
     </div>
@@ -14,20 +14,20 @@
     import axios      from 'axios';
     import jwt_decode from 'jwt-decode';
 
-    export default {
-        name: "CreateDep",
+    export default{
+        name: "CreateIps",
 
-        data: function(){
+        data:function(){
             return {
                 user: {
-                    name   : "",
-                    user_id: 0,   
+                    name:"",
+                    user_id:0,
                 }
             }
         },
-        
-        methods: {
-            processCreateDep: async function(){
+
+        methods:{
+            processCreateIps: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
                     this.$emit("logOut");
                     return;
@@ -38,12 +38,12 @@
 
                 this.user.user_id = userId;
                 axios.post(
-                    'http://localhost:8000/departamento/create/',
+                    'http://localhost:8000/ips/create/',
                     this.user,
                     {headers: {'Authorization': `Bearer ${token}`}}
                 )
                 .then((result) => {
-                    this.$emit('completedCreateDep');
+                    this.$emit('completedCreateIps');
                 })
                 .catch((error) => {
                     alert("ERROR: El registro ha fallado.");
@@ -64,13 +64,18 @@
                 })
             },
         },
+
         created: async function(){
         }
+
+
     }
+
 </script>
 
 <style>
-    .createDepUser{
+
+  .createIps{
         margin: 0;
         padding: 0%;
         height: 100%;
@@ -79,7 +84,7 @@
         justify-content: center;
         align-items: center;
     }
-    .containerCreateDepUser {
+    .containerCreateIps {
         border: 1px solid #ffffff;
         border-radius: 5px;
         width: 60%;
@@ -90,15 +95,15 @@
         justify-content: center;
         align-items: center;
     }
-    .createDepUser h4{
+    .createIps h4{
         color: #0e3063;
         text-align: center;
     }
 
-    .createDepUser form{
+    .createIps form{
         width: 70%;
     }
-    .createDepUser input{
+    .createIps input{
         height: 23px;
         width: 100%;
         box-sizing: border-box;
@@ -106,7 +111,7 @@
         margin: 5px 0;
         border: 1px solid #283747;
     }
-    .createDepUser button{
+    .createIps button{
         width: 100%;
         height: 40px;
         color: #E5E7E9;
@@ -118,9 +123,10 @@
     }
 
 
-    .createDepUser button:hover{
+    .createIps button:hover{
         color: #ffffff;
         background: rgb(179, 63, 54);
         border: 1px solid #283747;
     }
+
 </style>
