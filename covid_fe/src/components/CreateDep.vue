@@ -2,11 +2,8 @@
     <div class="createDepUser">
         <div class="containerCreateDepUser">
             <h4>A continuación, ingrese un nuevo departamento.</h4>
-            <form v-on:submit.prevent="processCreateDep" >
+            <form v-on:submit.prevent="processCreateDep">
                 <input type="text" v-model="user.name" placeholder="Departamento">
-                <br>
-                <input type="number" min="0" v-model="user.user_id" placeholder="User id">
-                <br>
                 <button type="submit">Agregar departamento</button>
             </form>
         </div>
@@ -14,38 +11,63 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import axios      from 'axios';
+    import jwt_decode from 'jwt-decode';
+
     export default {
         name: "CreateDep",
+
         data: function(){
             return {
                 user: {
                     name   : "",
-                    user_id: "",   
+                    user_id: 0,   
                     }
                 }
             },
+        
         methods: {
-            processCreateDep: function(){
-                console.log(this.user);
+            processCreateDep: async function(){
+                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+                    this.$emit("logOut");
+                    return;
+                }
+                await this.verifyToken();
+                let token  = localStorage.getItem("tokenAccess");
+                let userId = jwt_decode(token).user_id;
+
+                this.user.user_id = userId;
                 axios.post(
-                    "http://localhost:8000/departamento/create/",
+                    'http://localhost:8000/departamento/create/',
                     this.user,
-                    {headers: {}}
+                    {headers: {'Authorization': `Bearer ${token}`}}
                 )
                 .then((result) => {
-                    let dataCreateDep = {
-                        username     : this.user.user_id,
-                        tokenAccess  : result.data.access,
-                        tokenRefresh : result.data.refresh,
-                    }
-                    this.$emit('completedCreateDep', dataCreateDep)
+                    this.$emit('completedCreateDep');
                 })
                 .catch((error) => {
-                    console.log(error)
+                    console.log(this.user);
+                    console.log(token);
                     alert("ERROR: El registro ha fallado.");
-                });
-            }
+                })
+            },
+
+            verifyToken: async function(){
+                return axios.post(
+                    'http://localhost:8000/refresh/',
+                    {refresh: localStorage.getItem("tokenRefresh")},
+                    {headers:{}}
+                )
+                .then((result) => {
+                    localStorage.setItem("tokenAccess", result.data.access);
+                })
+                .catch((error) => {
+                    this.$emit("logOut");
+                })
+            },
+        },
+        created: async function(){
+    
         }
     }
 </script>

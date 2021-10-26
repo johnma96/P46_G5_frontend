@@ -18,6 +18,7 @@
       <router-view
         v-on:completedLogIn="completedLogIn"
         v-on:completedSignUp="completedSignUp"
+        v-on:completedCreateDep="completedCreateDep"
         v-on:logOut="logOut"
       >
       </router-view>
@@ -29,8 +30,8 @@
         <ul>
           <li>
             <a>
-              <i class="fa fa-home fa-2x"></i>
-              <span class="nav-text">
+              <i class="fa fa-home fa-2x" ></i>
+              <span class="nav-text" v-if="isAuth" v-on:click="loadCreateDep">
                 Dashboard
               </span>
             </a>
@@ -108,7 +109,7 @@
     </div>
 
     <div class="footer">
-      <h4>MisionTIC 2022 - P46 Grupo 5   <br>  Mario Montoya - Laura Roa</h4>
+      <h4>MisionTIC 2022 - P46 Grupo 5: Mario Montoya - Laura Roa</h4>
     </div>
 
   </div>
@@ -119,6 +120,7 @@
 <script>
   export default{
     name: 'App',
+
     data: function(){
       return {
         isAuth: false
@@ -163,6 +165,10 @@
         this.$router.push({name: "signUp"});
       },
 
+      loadCreateDep: function(){
+        this.$router.push({name: "createDep"});
+      },
+
       completedLogIn: function(data){
         localStorage.setItem('username', data.username);
         localStorage.setItem('tokenRefresh', data.tokenRefresh);
@@ -176,7 +182,16 @@
         alert("Registro exitoso");
         this.completedLogIn(data);
       },
+
+       completedCreateDep: function(){
+        alert("Registro exitoso");
+      },
     },
+
+
+
+
+    
 
     created: function(){
       this.verifyAuth();
@@ -207,6 +222,7 @@
     width: 100%;
     text-align: center;
     align-items: center;
+    padding: 0.5% 0 0 14%;
   }
   .header nav {
     height: 100%;
@@ -286,7 +302,7 @@
     position:absolute;
     top:0;
     bottom:0;
-    height:90%;
+    height:85.5%;
     left:0;
     width:60px;
     overflow:hidden;

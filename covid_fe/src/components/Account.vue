@@ -69,7 +69,6 @@
         },
 
         created: async function(){
-            console.log('in');
             this.getData();
         },
     }
