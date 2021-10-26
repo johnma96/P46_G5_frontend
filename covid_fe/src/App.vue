@@ -20,6 +20,7 @@
         v-on:completedSignUp="completedSignUp"
         v-on:completedCreateDep="completedCreateDep"
         v-on:completedCreateIps="completedCreateIps"
+        v-on:completedCreatePrueba="completedCreatePrueba"
         v-on:logOut="logOut"
       >
       </router-view>
@@ -33,7 +34,7 @@
             <a>
               <i class="fa fa-home fa-2x" ></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadCreateDep">
-                Crear Departamento
+                Ingresar nuevo departamento
               </span>
             </a>
 
@@ -42,7 +43,7 @@
             <a>
               <i class="fa fa-laptop fa-2x" ></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadCreateIps">
-                Stars Components
+                Ingresar nueva IPS
               </span>
             </a>
 
@@ -50,8 +51,8 @@
           <li class="has-subnav">
             <a>
               <i class="fa fa-list fa-2x"></i>
-              <span class="nav-text">
-                Forms
+              <span class="nav-text" v-if="isAuth" v-on:click="loadCreatePrueba">
+                Ingresar nueva prueba
               </span>
             </a>
 
@@ -174,6 +175,10 @@
         this.$router.push({name: "createIps"});
       },
 
+      loadCreatePrueba: function(){
+        this.$router.push({name: "createPrueba"});
+      },      
+
       completedLogIn: function(data){
         localStorage.setItem('username', data.username);
         localStorage.setItem('tokenRefresh', data.tokenRefresh);
@@ -188,11 +193,15 @@
         this.completedLogIn(data);
       },
 
-       completedCreateDep: function(){
+      completedCreateDep: function(){
         alert("Registro exitoso");
       },
 
-       completedCreateIps: function(){
+      completedCreateIps: function(){
+        alert("Registro exitoso");
+      },
+
+      completedCreatePrueba: function(){
         alert("Registro exitoso");
       },
     },

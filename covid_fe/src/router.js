@@ -7,6 +7,7 @@ import Home                                   from './components/Home.vue'
 import Account                                from './components/Account.vue'
 import CreateDep                              from './components/CreateDep.vue'
 import CreateIps                              from './components/CreateIps.vue'
+import CreatePrueba                           from './components/CreatePrueba.vue'
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
     path: '/IPS/create',
     name: "createIps",
     component: CreateIps
+  },
+  {
+    path: '/Prueba/create',
+    name: "createPrueba",
+    component: CreatePrueba
   },
 
 ]
