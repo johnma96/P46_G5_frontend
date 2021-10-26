@@ -60,8 +60,8 @@
           <li class="has-subnav">
             <a>
               <i class="fa fa-folder-open fa-2x"></i>
-              <span class="nav-text">
-                Pages
+              <span class="nav-text" v-if="isAuth" v-on:click="loadDetailPrueba">
+                Información de pruebas
               </span>
             </a>
 
@@ -177,7 +177,11 @@
 
       loadCreatePrueba: function(){
         this.$router.push({name: "createPrueba"});
-      },      
+      },    
+  
+      loadDetailPrueba: function(){
+        this.$router.push({name: "detailPrueba"});
+      },        
 
       completedLogIn: function(data){
         localStorage.setItem('username', data.username);

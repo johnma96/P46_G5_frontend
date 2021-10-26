@@ -8,6 +8,7 @@ import Account                                from './components/Account.vue'
 import CreateDep                              from './components/CreateDep.vue'
 import CreateIps                              from './components/CreateIps.vue'
 import CreatePrueba                           from './components/CreatePrueba.vue'
+import DetailPrueba                           from './components/GetDetailPrueba.vue'
 
 const routes = [
   {
@@ -50,7 +51,11 @@ const routes = [
     name: "createPrueba",
     component: CreatePrueba
   },
-
+  {
+    path: '/Prueba/detalle',
+    name: "detailPrueba",
+    component: DetailPrueba
+  },
 ]
 
 const router = createRouter({
