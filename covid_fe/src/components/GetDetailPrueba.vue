@@ -31,7 +31,7 @@
                     <th>Indeterminadas</th>
                     <th>Totales</th>
                 </tr>
-                <tr v-for="prueba in myPruebas">
+                <tr v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">
                     <td>{{ prueba.id }}</td>
                     <td>{{ prueba.testDate }}</td>
                     <td>{{ prueba.positiveTests }}</td>
@@ -300,7 +300,6 @@
         position: relative;
         border-collapse: collapse;
         text-align: center;
-        vertical-align: middle;
     }
 
     .informacionPruebas td, .informacionPruebas th {
