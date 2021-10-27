@@ -2,7 +2,7 @@
   <div id="app" class="app">
 
     <div class="header">
-      <h1>Portal de registros COVID-19</h1>
+      <h1>Portal registro de pruebas COVID-19</h1>
       <nav>
         <button v-if="isAuth" v-on:click="loadHome"> Inicio </button>
         <button v-if="isAuth" v-on:click="loadAccount"> Cuenta </button>
@@ -32,7 +32,7 @@
         <ul>
           <li>
             <a>
-              <i class="fa fa-home fa-2x" ></i>
+              <i class="fa fa-map-marker fa-2x" ></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadCreateDep">
                 Ingresar nuevo departamento
               </span>
@@ -41,7 +41,7 @@
           </li>
           <li class="has-subnav">
             <a>
-              <i class="fa fa-laptop fa-2x" ></i>
+              <i class="fa fa-user-md fa-2x" ></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadCreateIps">
                 Ingresar nueva IPS
               </span>
@@ -50,7 +50,7 @@
           </li>
           <li class="has-subnav">
             <a>
-              <i class="fa fa-list fa-2x"></i>
+              <i class="fa fa-medkit fa-2x"></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadCreatePrueba">
                 Ingresar nueva prueba
               </span>
@@ -68,9 +68,9 @@
           </li>
           <li>
             <a>
-              <i class="fa fa-bar-chart-o fa-2x"></i>
-              <span class="nav-text">
-                Graphs and Statistics
+              <i class="fa fa-hospital-o  fa-2x"></i>
+              <span class="nav-text" v-if="isAuth" v-on:click="loadIpsDepList">
+                IPS y departamentos registrados
               </span>
             </a>
           </li>
@@ -181,7 +181,11 @@
   
       loadDetailPrueba: function(){
         this.$router.push({name: "detailPrueba"});
-      },        
+      },
+      
+      loadIpsDepList: function(){
+        this.$router.push({name: "ipsDepList"});
+      },   
 
       completedLogIn: function(data){
         localStorage.setItem('username', data.username);
