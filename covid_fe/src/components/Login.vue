@@ -27,6 +27,7 @@
                 }
             }
         },
+        
         methods: {
             processLogInUser: function(){
                 axios.post(

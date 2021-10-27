@@ -3,6 +3,12 @@ import App                                    from './App.vue'
 
 import Login                                  from './components/Login.vue'
 import SignUp                                 from './components/SignUp.vue'
+import Home                                   from './components/Home.vue'
+import Account                                from './components/Account.vue'
+import CreateDep                              from './components/CreateDep.vue'
+import CreateIps                              from './components/CreateIps.vue'
+import CreatePrueba                           from './components/CreatePrueba.vue'
+import DetailPrueba                           from './components/GetDetailPrueba.vue'
 
 const routes = [
   {
@@ -20,7 +26,36 @@ const routes = [
     name: "signUp",
     component: SignUp
   },
-
+  {
+    path: '/user/home',
+    name: "home",
+    component: Home
+  },
+  {
+    path: '/user/account',
+    name: "account",
+    component: Account
+  },
+  {
+    path: '/departamento/create',
+    name: "createDep",
+    component: CreateDep
+  },
+  {
+    path: '/IPS/create',
+    name: "createIps",
+    component: CreateIps
+  },
+  {
+    path: '/Prueba/create',
+    name: "createPrueba",
+    component: CreatePrueba
+  },
+  {
+    path: '/Prueba/detalle',
+    name: "detailPrueba",
+    component: DetailPrueba
+  },
 ]
 
 const router = createRouter({
