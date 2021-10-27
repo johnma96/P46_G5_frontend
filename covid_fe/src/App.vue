@@ -21,6 +21,7 @@
         v-on:completedCreateDep="completedCreateDep"
         v-on:completedCreateIps="completedCreateIps"
         v-on:completedCreatePrueba="completedCreatePrueba"
+        v-on:completedUpdatePrueba="completedUpdatePrueba"
         v-on:logOut="logOut"
       >
       </router-view>
@@ -77,8 +78,8 @@
           <li>
             <a>
               <i class="fa fa-font fa-2x"></i>
-              <span class="nav-text">
-                Quotes
+              <span class="nav-text" v-if="isAuth" v-on:click="loadUpdatePrueba">
+                Actualizar una prueba
               </span>
             </a>
           </li>
@@ -185,6 +186,10 @@
       
       loadIpsDepList: function(){
         this.$router.push({name: "ipsDepList"});
+      },
+
+      loadUpdatePrueba: function(){
+        this.$router.push({name: "updatePrueba"});
       },   
 
       completedLogIn: function(data){
@@ -211,6 +216,10 @@
 
       completedCreatePrueba: function(){
         alert("Registro exitoso");
+      },
+
+      completedUpdatePrueba: function(){
+        alert("Actualización exitosa");
       },
     },
 
