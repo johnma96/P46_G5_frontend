@@ -9,6 +9,7 @@ import CreateDep                              from './components/CreateDep.vue'
 import CreateIps                              from './components/CreateIps.vue'
 import CreatePrueba                           from './components/CreatePrueba.vue'
 import DetailPrueba                           from './components/GetDetailPrueba.vue'
+import IpsDepList                             from './components/GetIpsDepList.vue'
 
 const routes = [
   {
@@ -55,6 +56,12 @@ const routes = [
     path: '/Prueba/detalle',
     name: "detailPrueba",
     component: DetailPrueba
+  },
+
+  {
+    path: '/IpsDep/list',
+    name: "ipsDepList",
+    component: IpsDepList
   },
 ]
 
