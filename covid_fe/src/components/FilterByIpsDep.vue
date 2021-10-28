@@ -1,24 +1,34 @@
 <template >
     <div class="detailPrueba">
         <div class="containerPrueba">
-            <h2>Seleccione una opción:</h2>
+            <h2>Seleccione una de las siguientes opciones:</h2>
+            <!-- <input type="checkbox" Departamento> -->
+            <div>
+                <label class="content-input">
+                    <input type="checkbox" id="cbox1" value="first_checkbox" v-on:click="getMyDepartamentoList;"> Departamento
+                    <i></i>
+                </label>
+                <label class="content-input">
+                    <input type="checkbox" id="cbox2" value="second_checkbox" v-on:click="getMyIpsList"> IPS
+                    <i></i>
+                </label>
+            </div>
+
             <form v-on:submit.prevent="getPrueba">
-                <select v-model="prueba.id">
-                    <option v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">{{ prueba.testDate }} - Prueba {{ prueba.id }}</option>   
-                    <option>Todas</option>
+                <select v-model="resultado">
+                    <option v-for="departamento in myDepartamento"  v-if="!departamento">{{ departamento.name }} </option>  
+                    <option v-for="ips in myIps"   v-if="!ips">{{ ips.name }}</option>   
                 </select>
                 <button type="submit">Ver detalle de la prueba</button>
             </form>
             <nav>
                 <button v-on:click="deletePrueba" >Eliminar prueba</button>
             </nav>
+            
 
-            <h2 v-if="table">Filtar por fecha</h2>
-            <form v-on:submit.prevent="filtrarFecha"  v-if="table">
-                <Datepicker v-model="datei" ></Datepicker>
-                <Datepicker v-model="datef" ></Datepicker>
-                <button type="submit">Filtrar</button>
-            </form>
+
+
+
         </div>   
 
         <div class="informacionPrueba" v-if="loaded" >
@@ -40,7 +50,7 @@
                     <th>Indeterminadas</th>
                     <th>Totales</th>
                 </tr>
-                <tr v-for="prueba in myPruebasTable" :key="prueba.id" :value="prueba.id">
+                <tr v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">
                     <td>{{ prueba.id }}</td>
                     <td>{{ prueba.testDate }}</td>
                     <td>{{ prueba.positiveTests }}</td>
@@ -57,40 +67,19 @@
 <script>
     import axios      from 'axios';
     import jwt_decode from 'jwt-decode';
-    import Datepicker from 'vue3-date-time-picker';
-    import 'vue3-date-time-picker/dist/main.css'
 
     export default{
-        name: "DetailPrueba",
-        components: { Datepicker },
+        name: "FilterByIpsDep",
 
         data: function(){
             return{
-                datei: null,
-                datef: null,
-                dateFormat : 'yyyy-MM-dd',
-                loaded   : false,
-                table    : false,
-                prueba   : {
-                    id : 0,
-                    testDate : "",
-                    positiveTests :"",
-                    negativeTests:"",
-                    indeterminateTests:"",
-                    totalTests:"",
-                },
-                myPruebas : [],
-                myPruebasTable : [],
-                value: '',
-                context: null
+                resultado: "",
+                myDepartamento : [],
+                myIps : [],
             }
         },
 
         methods:{
-            onContext(ctx) {
-                this.context = ctx
-            },
-
             verifyToken: async function(){
                 return axios.post(
                         'http://localhost:8000/refresh/',
@@ -106,7 +95,8 @@
                     })
             },
 
-            getMyPruebasList: async function(){
+
+             getMyIpsList: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
                     this.$emit("logOut");
                     return;
@@ -114,16 +104,13 @@
 
                 await this.verifyToken();
                 let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                
+
                 axios.get(
-                    `http://localhost:8000/prueba/${userId}/`,
+                    `http://localhost:8000/ips/list/`,
                     {headers: {'Authorization': `Bearer ${token}`}}
                 )
                 .then((result) => {
-                    console.log( result.data);
-                    this.myPruebas = result.data;
-                    
+                    this.myIps = result.data;
                 })
                 .catch((error) => {
                     if(error.response.status == "401") {
@@ -135,7 +122,8 @@
                 })
             },
 
-            getPrueba: async function(){
+
+              getMyDepartamentoList: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
                     this.$emit("logOut");
                     return;
@@ -143,66 +131,13 @@
 
                 await this.verifyToken();
                 let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                let pruebaId = this.prueba.id;
-                
-                if (pruebaId != "Todas"){
 
-                    axios.get(
-                        `http://localhost:8000/prueba/${userId}/${pruebaId}/`,
-                        {headers: {'Authorization': `Bearer ${token}`}}
-                    )
-                    .then((result) => {
-                        this.loaded             = true;
-                        this.table              =false;
-                        this.testDate           = result.data.testDate;
-                        this.positiveTests      = result.data.positiveTests;
-                        this.negativeTests      = result.data.negativeTests;
-                        this.indeterminateTests = result.data.indeterminateTests;
-                        this.totalTests         = result.data.totalTests;
-                    })
-                    .catch((error) => {
-                        if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
-                        }
-                        else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
-                        }
-                    })
-                } else {
-                    this.table = true;
-                    this.loaded = false;
-                    this.myPruebasTable = this.myPruebas;
-                }
-            },
-
-            filtrarFecha: async function(){
-                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
-                    this.$emit("logOut");
-                    return;
-                }
-
-                await this.verifyToken();
-                let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                let tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-                let datei = (new Date(this.datei - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
-                let datef = new Date(this.datef - tzoffset).toISOString().slice(0, 19).replace('T', ' ');
-
-             
-                
                 axios.get(
-                    `http://localhost:8000/prueba/${userId}/`,
-                    {headers: {'Authorization': `Bearer ${token}`},
-                        params : {
-                            startDate : datei,
-                            endDate   :datef,
-                        }
-                    }
+                    `http://localhost:8000/departamento/list/`,
+                    {headers: {'Authorization': `Bearer ${token}`}}
                 )
                 .then((result) => {
-                    this.myPruebasTable = result.data;
-                    
+                    this.myDepartamento = result.data;
                 })
                 .catch((error) => {
                     if(error.response.status == "401") {
@@ -212,47 +147,16 @@
                         alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
                     }
                 })
-
             },
 
-
-            deletePrueba: async function(){
-                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
-                    this.$emit("logOut");
-                    return;
-                }
-
-                await this.verifyToken();
-                let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                let pruebaId = this.prueba.id;
-
-                axios.delete(
-                        `http://localhost:8000/prueba/delete/${userId}/${pruebaId}/`,
-                        {headers: {'Authorization': `Bearer ${token}`}}
-                    )
-                    .then((result) => {
-                        this.$emit("completedDeletePrueba");
-                        this.getMyPruebasList();
-                    })
-                    .catch((error) => {
-                        if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
-                        }
-                        else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
-                        }
-                    })
-
-
-            },
+    
 
 
         },
 
         created: async function(){
-            this.getMyPruebasList();
-            this.getPrueba();
+            // this.getMyDepartamentoList();
+            // this.getMyIpsList();
         }
     }
 </script>
@@ -435,4 +339,83 @@
 
     }
 
+.content-input input,
+.content-select select{
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+ 
+.content-input input{
+	visibility: hidden;
+	position: absolute;
+	right: 0;
+}
+
+.content-input{
+	position: relative;
+	margin-bottom: 30px;
+	padding:5px 0 5px 70px; /* Damos un padding de 60px para posicionar 
+        el elemento <i> en este espacio*/
+	display: block;
+}
+
+
+.content-input input + i{
+       background: #f0f0f0;
+       border:2px solid rgba(0,0,0,0.2);
+       position: absolute; 
+       left: 0;
+       top: 0;
+}
+
+
+.content-input input[type=checkbox ] + i{
+	width: 65px;
+	height: 30px;
+	border-radius: 15px;
+}
+
+
+.content-input input[type=checkbox] + i:before{
+	content: ''; /* No hay contenido */
+	width: 30px;
+	height: 30px;
+	background: #fff;
+	border-radius: 50%;
+	position: absolute;
+	z-index: 1;
+	left: 0px;
+	top: 0px;
+	-webkit-box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+	box-shadow: 3px 0 3px 0 rgba(0,0,0,0.2);
+}
+
+.content-input input[type=checkbox]:checked + i:before{
+	left: 35px;
+	-webkit-box-shadow: -3px 0 3px 0 rgba(0,0,0,0.2);
+	box-shadow: 3px 0 -3px 0 rgba(0,0,0,0.2);
+}
+ 
+.content-input input[type=checkbox]:checked + i{
+ background: #2AC176;
+}
+
+.content-input input[type=checkbox] + i:after{
+	content: 'ON';
+	position: absolute;
+	font-size: 15px;
+	color: rgba(255,255,255,0.6);
+	top: 6px;
+	left: 4px;
+	opacity: 0 /* Ocultamos este elemento */;
+	transition: all 0.25s ease 0.25s;
+}
+ 
+/* Cuando esté checkeado cambiamos la opacidad a 1 y lo mostramos */
+.content-input input[type=checkbox]:checked + i:after{
+ opacity: 1;
+}
+       
+    
 </style>

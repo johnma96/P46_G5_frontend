@@ -1,17 +1,13 @@
 <template >
     <div class="detailPrueba">
         <div class="containerPrueba">
-            <h2>Seleccione una opción:</h2>
-            <form v-on:submit.prevent="getPrueba">
-                <select v-model="prueba.id">
-                    <option v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">{{ prueba.testDate }} - Prueba {{ prueba.id }}</option>   
-                    <option>Todas</option>
+            <h2>Seleccione una IPS:</h2>
+            <form v-on:submit.prevent="getPruebasByIps">
+                <select v-model="ips.name">
+                    <option v-for="ips in myIps" :key="ips.name" :value="ips.name">{{ ips.name }}</option>   
                 </select>
-                <button type="submit">Ver detalle de la prueba</button>
+                <button type="submit">Ver pruebas por IPS</button>
             </form>
-            <nav>
-                <button v-on:click="deletePrueba" >Eliminar prueba</button>
-            </nav>
 
             <h2 v-if="table">Filtar por fecha</h2>
             <form v-on:submit.prevent="filtrarFecha"  v-if="table">
@@ -19,18 +15,12 @@
                 <Datepicker v-model="datef" ></Datepicker>
                 <button type="submit">Filtrar</button>
             </form>
+
         </div>   
 
-        <div class="informacionPrueba" v-if="loaded" >
-            <h2>Fecha de la prueba:     <span>{{ testDate }}</span>  </h2>
-            <h2>Pruebas positivas:      <span>{{ positiveTests }}</span> </h2>
-            <h2>Pruebas negativas:      <span>{{ negativeTests }}</span> </h2>
-            <h2>Pruebas indeterminadas: <span>{{ indeterminateTests }}</span> </h2>
-            <h2>Pruebas totales:        <span>{{ totalTests }}</span> </h2>
-        </div>
 
-        <div class="informacionPruebas" v-if="table" >
-            <h2>Resumen de sus pruebas</h2>
+        <div class="informacionPruebas" v-if="table">
+            <h2>Resumen de las pruebas</h2>
             <table>
                 <tr>
                     <th>Id</th>
@@ -40,7 +30,7 @@
                     <th>Indeterminadas</th>
                     <th>Totales</th>
                 </tr>
-                <tr v-for="prueba in myPruebasTable" :key="prueba.id" :value="prueba.id">
+                <tr v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">
                     <td>{{ prueba.id }}</td>
                     <td>{{ prueba.testDate }}</td>
                     <td>{{ prueba.positiveTests }}</td>
@@ -60,8 +50,9 @@
     import Datepicker from 'vue3-date-time-picker';
     import 'vue3-date-time-picker/dist/main.css'
 
+
     export default{
-        name: "DetailPrueba",
+        name: "FilterByIps",
         components: { Datepicker },
 
         data: function(){
@@ -69,20 +60,14 @@
                 datei: null,
                 datef: null,
                 dateFormat : 'yyyy-MM-dd',
-                loaded   : false,
-                table    : false,
-                prueba   : {
-                    id : 0,
-                    testDate : "",
-                    positiveTests :"",
-                    negativeTests:"",
-                    indeterminateTests:"",
-                    totalTests:"",
+                ips:{
+                    id: 0,
+                    name: "",
                 },
+                table    : false,
+                myIps : [],
                 myPruebas : [],
-                myPruebasTable : [],
-                value: '',
-                context: null
+                context: null,
             }
         },
 
@@ -106,7 +91,8 @@
                     })
             },
 
-            getMyPruebasList: async function(){
+
+            getMyIpsList: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
                     this.$emit("logOut");
                     return;
@@ -114,16 +100,13 @@
 
                 await this.verifyToken();
                 let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                
+
                 axios.get(
-                    `http://localhost:8000/prueba/${userId}/`,
+                    `http://localhost:8000/ips/list/`,
                     {headers: {'Authorization': `Bearer ${token}`}}
                 )
                 .then((result) => {
-                    console.log( result.data);
-                    this.myPruebas = result.data;
-                    
+                    this.myIps = result.data;
                 })
                 .catch((error) => {
                     if(error.response.status == "401") {
@@ -135,7 +118,7 @@
                 })
             },
 
-            getPrueba: async function(){
+             getPruebasByIps: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
                     this.$emit("logOut");
                     return;
@@ -143,37 +126,28 @@
 
                 await this.verifyToken();
                 let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                let pruebaId = this.prueba.id;
-                
-                if (pruebaId != "Todas"){
+                let userId = jwt_decode(token).user_id;
+                let nameIps =  this.ips.name;
+                this.table = true;
 
-                    axios.get(
-                        `http://localhost:8000/prueba/${userId}/${pruebaId}/`,
-                        {headers: {'Authorization': `Bearer ${token}`}}
-                    )
-                    .then((result) => {
-                        this.loaded             = true;
-                        this.table              =false;
-                        this.testDate           = result.data.testDate;
-                        this.positiveTests      = result.data.positiveTests;
-                        this.negativeTests      = result.data.negativeTests;
-                        this.indeterminateTests = result.data.indeterminateTests;
-                        this.totalTests         = result.data.totalTests;
-                    })
-                    .catch((error) => {
-                        if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
-                        }
-                        else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
-                        }
-                    })
-                } else {
-                    this.table = true;
-                    this.loaded = false;
-                    this.myPruebasTable = this.myPruebas;
-                }
+                console.log(nameIps)
+
+                axios.get(
+                    `http://localhost:8000/prueba/ips/${userId}/${nameIps}/`,
+                    {headers: {'Authorization': `Bearer ${token}`}}
+                )
+                .then((result) => {
+                    this.myPruebas = result.data;
+
+                })
+                .catch((error) => {
+                    if(error.response.status == "401") {
+                        alert("Usted no está autorizado para realizar esta operación.");
+                    }
+                    else if(error.response.status == "500"){
+                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    }
+                })
             },
 
             filtrarFecha: async function(){
@@ -188,11 +162,10 @@
                 let tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
                 let datei = (new Date(this.datei - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
                 let datef = new Date(this.datef - tzoffset).toISOString().slice(0, 19).replace('T', ' ');
-
-             
+                let nameIps =  this.ips.name;
                 
                 axios.get(
-                    `http://localhost:8000/prueba/${userId}/`,
+                    `http://localhost:8000/prueba/ips/${userId}/${nameIps}/`,
                     {headers: {'Authorization': `Bearer ${token}`},
                         params : {
                             startDate : datei,
@@ -201,7 +174,7 @@
                     }
                 )
                 .then((result) => {
-                    this.myPruebasTable = result.data;
+                    this.myPruebas = result.data;
                     
                 })
                 .catch((error) => {
@@ -215,44 +188,10 @@
 
             },
 
-
-            deletePrueba: async function(){
-                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
-                    this.$emit("logOut");
-                    return;
-                }
-
-                await this.verifyToken();
-                let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
-                let pruebaId = this.prueba.id;
-
-                axios.delete(
-                        `http://localhost:8000/prueba/delete/${userId}/${pruebaId}/`,
-                        {headers: {'Authorization': `Bearer ${token}`}}
-                    )
-                    .then((result) => {
-                        this.$emit("completedDeletePrueba");
-                        this.getMyPruebasList();
-                    })
-                    .catch((error) => {
-                        if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
-                        }
-                        else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
-                        }
-                    })
-
-
-            },
-
-
         },
 
         created: async function(){
-            this.getMyPruebasList();
-            this.getPrueba();
+            this.getMyIpsList();
         }
     }
 </script>
@@ -338,49 +277,7 @@
         border: 1px solid #283747;
     }
 
-    .informacionPrueba {
-        border: 1px solid #ffffff;
-        border-radius: 5px;
-        position: relative;
-        width: 40%;
-        height: 100%;
-        display: flex;
-        background: #ffffff;
-        flex-direction: column;
-        top: 0%;
-        right: 0%;
-        left: 5%;
-        align-items: center;
-    }
-
-    .informacionPrueba h2{
-        top: 15%;
-        font-size: 25px;
-        color: #0d5f74;
-        position: relative;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .informacionPruebas {
-        border: 1px solid #ffffff;
-        border-radius: 5px;
-        position: relative;
-        width: 40%;
-        height: 100%;
-        display: flex;
-        background: #ffffff;
-        flex-direction: column;
-        top: 0%;
-        right: 0%;
-        left: 5%;
-        align-items: center;    
-    }
-
+    
     .informacionPruebas h2{
         font-size: 25px;
         color: #0e3063;
@@ -422,17 +319,5 @@
         color: white;
     }
 
-    .containerPrueba nav button{
-
-        width: 100%;
-        height: 40px;
-        color: #E5E7E9;
-        background: rgb(179, 63, 54);
-        border: 1px solid #E5E7E9;
-        border-radius: 5px;
-        padding: 10px 25px;
-        margin: 5px 0 25px 0;
-
-    }
 
 </style>
