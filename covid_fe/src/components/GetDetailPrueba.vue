@@ -12,7 +12,13 @@
             <nav>
                 <button v-on:click="deletePrueba" >Eliminar prueba</button>
             </nav>
-            
+
+            <h2 v-if="table">Filtar por fecha</h2>
+            <form v-on:submit.prevent="filtrarFecha"  v-if="table">
+                <Datepicker v-model="datei" ></Datepicker>
+                <Datepicker v-model="datef" ></Datepicker>
+                <button type="submit">Filtrar</button>
+            </form>
         </div>   
 
         <div class="informacionPrueba" v-if="loaded" >
@@ -34,7 +40,7 @@
                     <th>Indeterminadas</th>
                     <th>Totales</th>
                 </tr>
-                <tr v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">
+                <tr v-for="prueba in myPruebasTable" :key="prueba.id" :value="prueba.id">
                     <td>{{ prueba.id }}</td>
                     <td>{{ prueba.testDate }}</td>
                     <td>{{ prueba.positiveTests }}</td>
@@ -51,12 +57,18 @@
 <script>
     import axios      from 'axios';
     import jwt_decode from 'jwt-decode';
+    import Datepicker from 'vue3-date-time-picker';
+    import 'vue3-date-time-picker/dist/main.css'
 
     export default{
         name: "DetailPrueba",
+        components: { Datepicker },
 
         data: function(){
             return{
+                datei: null,
+                datef: null,
+                dateFormat : 'yyyy-MM-dd',
                 loaded   : false,
                 table    : false,
                 prueba   : {
@@ -68,10 +80,17 @@
                     totalTests:"",
                 },
                 myPruebas : [],
+                myPruebasTable : [],
+                value: '',
+                context: null
             }
         },
 
         methods:{
+            onContext(ctx) {
+                this.context = ctx
+            },
+
             verifyToken: async function(){
                 return axios.post(
                         'http://localhost:8000/refresh/',
@@ -96,13 +115,15 @@
                 await this.verifyToken();
                 let token  = localStorage.getItem("tokenAccess");
                 let userId = jwt_decode(token).user_id.toString();
-
+                
                 axios.get(
                     `http://localhost:8000/prueba/${userId}/`,
                     {headers: {'Authorization': `Bearer ${token}`}}
                 )
                 .then((result) => {
+                    console.log( result.data);
                     this.myPruebas = result.data;
+                    
                 })
                 .catch((error) => {
                     if(error.response.status == "401") {
@@ -151,8 +172,49 @@
                 } else {
                     this.table = true;
                     this.loaded = false;
+                    this.myPruebasTable = this.myPruebas;
                 }
             },
+
+            filtrarFecha: async function(){
+                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+                    this.$emit("logOut");
+                    return;
+                }
+
+                await this.verifyToken();
+                let token  = localStorage.getItem("tokenAccess");
+                let userId = jwt_decode(token).user_id.toString();
+                let tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+                let datei = (new Date(this.datei - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
+                let datef = new Date(this.datef - tzoffset).toISOString().slice(0, 19).replace('T', ' ');
+
+             
+                
+                axios.get(
+                    `http://localhost:8000/prueba/${userId}/`,
+                    {headers: {'Authorization': `Bearer ${token}`},
+                        params : {
+                            startDate : datei,
+                            endDate   :datef,
+                        }
+                    }
+                )
+                .then((result) => {
+                    this.myPruebasTable = result.data;
+                    
+                })
+                .catch((error) => {
+                    if(error.response.status == "401") {
+                        alert("Usted no está autorizado para realizar esta operación.");
+                    }
+                    else if(error.response.status == "500"){
+                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    }
+                })
+
+            },
+
 
             deletePrueba: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
