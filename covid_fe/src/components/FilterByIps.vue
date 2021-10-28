@@ -4,12 +4,18 @@
             <h2>Seleccione una IPS:</h2>
             <form v-on:submit.prevent="getPruebasByIps">
                 <select v-model="ips.name">
-                    <option v-for="ips in myIps">{{ ips.name }}</option>   
+                    <option v-for="ips in myIps" :key="ips.name" :value="ips.name">{{ ips.name }}</option>   
                 </select>
                 <button type="submit">Ver pruebas por IPS</button>
             </form>
 
-            
+            <h2 v-if="table">Filtar por fecha</h2>
+            <form v-on:submit.prevent="filtrarFecha"  v-if="table">
+                <Datepicker v-model="datei" ></Datepicker>
+                <Datepicker v-model="datef" ></Datepicker>
+                <button type="submit">Filtrar</button>
+            </form>
+
         </div>   
 
 
@@ -41,23 +47,35 @@
 <script>
     import axios      from 'axios';
     import jwt_decode from 'jwt-decode';
+    import Datepicker from 'vue3-date-time-picker';
+    import 'vue3-date-time-picker/dist/main.css'
+
 
     export default{
         name: "FilterByIps",
+        components: { Datepicker },
 
         data: function(){
             return{
+                datei: null,
+                datef: null,
+                dateFormat : 'yyyy-MM-dd',
                 ips:{
                     id: 0,
                     name: "",
                 },
                 table    : false,
                 myIps : [],
-                myPruebas : []
+                myPruebas : [],
+                context: null,
             }
         },
 
         methods:{
+            onContext(ctx) {
+                this.context = ctx
+            },
+
             verifyToken: async function(){
                 return axios.post(
                         'http://localhost:8000/refresh/',
@@ -130,6 +148,44 @@
                         alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
                     }
                 })
+            },
+
+            filtrarFecha: async function(){
+                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+                    this.$emit("logOut");
+                    return;
+                }
+
+                await this.verifyToken();
+                let token  = localStorage.getItem("tokenAccess");
+                let userId = jwt_decode(token).user_id.toString();
+                let tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+                let datei = (new Date(this.datei - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
+                let datef = new Date(this.datef - tzoffset).toISOString().slice(0, 19).replace('T', ' ');
+                let nameIps =  this.ips.name;
+                
+                axios.get(
+                    `http://localhost:8000/prueba/ips/${userId}/${nameIps}/`,
+                    {headers: {'Authorization': `Bearer ${token}`},
+                        params : {
+                            startDate : datei,
+                            endDate   :datef,
+                        }
+                    }
+                )
+                .then((result) => {
+                    this.myPruebas = result.data;
+                    
+                })
+                .catch((error) => {
+                    if(error.response.status == "401") {
+                        alert("Usted no está autorizado para realizar esta operación.");
+                    }
+                    else if(error.response.status == "500"){
+                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    }
+                })
+
             },
 
         },

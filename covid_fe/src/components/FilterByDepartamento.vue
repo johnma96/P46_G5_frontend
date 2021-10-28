@@ -67,7 +67,6 @@
                 table    : false,
                 myDepartamento : [],
                 myPruebas : [],
-                myPruebasTable : [],
                 context: null,
             }
         },
@@ -164,7 +163,7 @@
                 let datei = (new Date(this.datei - tzoffset)).toISOString().slice(0, 19).replace('T', ' ');
                 let datef = new Date(this.datef - tzoffset).toISOString().slice(0, 19).replace('T', ' ');
                 let nameDepartamento =  this.departamento.name;
-                
+
                 axios.get(
                     `http://localhost:8000/prueba/departamento/${userId}/${nameDepartamento}/`,
                     {headers: {'Authorization': `Bearer ${token}`},
