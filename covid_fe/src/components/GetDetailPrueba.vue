@@ -9,6 +9,10 @@
                 </select>
                 <button type="submit">Ver detalle de la prueba</button>
             </form>
+            <nav>
+                <button v-on:click="deletePrueba" >Eliminar prueba</button>
+            </nav>
+            
         </div>   
 
         <div class="informacionPrueba" v-if="loaded" >
@@ -30,7 +34,7 @@
                     <th>Indeterminadas</th>
                     <th>Totales</th>
                 </tr>
-                <tr v-for="prueba in myPruebas">
+                <tr v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">
                     <td>{{ prueba.id }}</td>
                     <td>{{ prueba.testDate }}</td>
                     <td>{{ prueba.positiveTests }}</td>
@@ -122,7 +126,6 @@
                 let pruebaId = this.prueba.id;
                 
                 if (pruebaId != "Todas"){
-                    console.log(pruebaId);
 
                     axios.get(
                         `http://localhost:8000/prueba/${userId}/${pruebaId}/`,
@@ -149,6 +152,37 @@
                     this.table = true;
                     this.loaded = false;
                 }
+            },
+
+            deletePrueba: async function(){
+                if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
+                    this.$emit("logOut");
+                    return;
+                }
+
+                await this.verifyToken();
+                let token  = localStorage.getItem("tokenAccess");
+                let userId = jwt_decode(token).user_id.toString();
+                let pruebaId = this.prueba.id;
+
+                axios.delete(
+                        `http://localhost:8000/prueba/delete/${userId}/${pruebaId}/`,
+                        {headers: {'Authorization': `Bearer ${token}`}}
+                    )
+                    .then((result) => {
+                        this.$emit("completedDeletePrueba");
+                        this.getMyPruebasList();
+                    })
+                    .catch((error) => {
+                        if(error.response.status == "401") {
+                            alert("Usted no está autorizado para realizar esta operación.");
+                        }
+                        else if(error.response.status == "500"){
+                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                        }
+                    })
+
+
             },
 
 
@@ -299,7 +333,6 @@
         position: relative;
         border-collapse: collapse;
         text-align: center;
-        vertical-align: middle;
     }
 
     .informacionPruebas td, .informacionPruebas th {

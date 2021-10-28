@@ -22,6 +22,7 @@
         v-on:completedCreateIps="completedCreateIps"
         v-on:completedCreatePrueba="completedCreatePrueba"
         v-on:completedUpdatePrueba="completedUpdatePrueba"
+        v-on:completedDeletePrueba="completedDeletePrueba"        
         v-on:logOut="logOut"
       >
       </router-view>
@@ -220,6 +221,10 @@
 
       completedUpdatePrueba: function(){
         alert("Actualización exitosa");
+      },
+
+      completedDeletePrueba: function(){
+        alert("El registro ha sido eliminado");
       },
     },
 
