@@ -1,72 +1,58 @@
-<template >
-    <div class="detailPrueba">
-        <div class="containerPrueba">
-            <h2>Seleccione una opción para ver información de las pruebas registradas:</h2>
+<template>
+     <div class="updatePrueba">
+        <div class="containerUpdatePrueba">
+            <h4>Seleccione la prueba que desea actualizar:.</h4>
             <form v-on:submit.prevent="getPrueba">
                 <select v-model="prueba.id">
                     <option v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">{{ prueba.testDate }} - Prueba {{ prueba.id }}</option>   
-                    <option>Todas</option>
                 </select>
-                <button type="submit">Ver detalle de la prueba</button>
             </form>
-            <nav>
-                <button v-on:click="deletePrueba" >Eliminar prueba</button>
-            </nav>
-            
-        </div>   
-
-        <div class="informacionPrueba" v-if="loaded" >
-            <h2>Fecha de la prueba:     <span>{{ testDate }}</span>  </h2>
-            <h2>Pruebas positivas:      <span>{{ positiveTests }}</span> </h2>
-            <h2>Pruebas negativas:      <span>{{ negativeTests }}</span> </h2>
-            <h2>Pruebas indeterminadas: <span>{{ indeterminateTests }}</span> </h2>
-            <h2>Pruebas totales:        <span>{{ totalTests }}</span> </h2>
+            <h4>Ingrese los nuevos datos de la prueba:</h4>
+            <form v-on:submit.prevent="updatePrueba">
+                <input type="text" v-model="nuevos_datos.testDate" placeholder="Fecha realización prueba">
+                <br>
+                <input type="number" v-model="nuevos_datos.positiveTests" min="0" placeholder="Pruebas positivas">
+                <br>
+                <input type="number" v-model="nuevos_datos.negativeTests" min="0" placeholder="Pruebas negativas">
+                <br>
+                <input type="number" v-model="nuevos_datos.indeterminateTests" min="0"  placeholder="Pruebas indeterminadas">
+                <br>
+                <button type="submit">Actualizar pruebas</button>
+            </form>
         </div>
-
-        <div class="informacionPruebas" v-if="table" >
-            <h2>Resumen de sus pruebas</h2>
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Fecha</th>
-                    <th>Positivas</th>
-                    <th>Negativas</th>
-                    <th>Indeterminadas</th>
-                    <th>Totales</th>
-                </tr>
-                <tr v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">
-                    <td>{{ prueba.id }}</td>
-                    <td>{{ prueba.testDate }}</td>
-                    <td>{{ prueba.positiveTests }}</td>
-                    <td>{{ prueba.negativeTests }}</td>
-                    <td>{{ prueba.indeterminateTests }}</td>
-                    <td>{{ prueba.totalTests }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    
+    </div>   
 </template>
 
-<script>
-    import axios      from 'axios';
-    import jwt_decode from 'jwt-decode';
 
-    export default{
-        name: "DetailPrueba",
+<script>
+
+import axios      from 'axios';
+import jwt_decode from 'jwt-decode';
+
+export default{
+        name: "UpdatePrueba",
 
         data: function(){
             return{
-                loaded   : false,
-                table    : false,
                 prueba   : {
                     id : 0,
-                    testDate : "",
+                    testDate : (new Date()).toJSON().toString(),
                     positiveTests :"",
                     negativeTests:"",
                     indeterminateTests:"",
                     totalTests:"",
                 },
+
+                nuevos_datos:{
+                    dep_ips : 0,
+                    testDate : (new Date()).toJSON().toString(),
+                    positiveTests :"",
+                    negativeTests:"",
+                    indeterminateTests:"",
+                    totalTests:"",
+
+                },
+
                 myPruebas : [],
             }
         },
@@ -126,6 +112,7 @@
                 let pruebaId = this.prueba.id;
                 
                 if (pruebaId != "Todas"){
+                    console.log(pruebaId);
 
                     axios.get(
                         `http://localhost:8000/prueba/${userId}/${pruebaId}/`,
@@ -154,7 +141,7 @@
                 }
             },
 
-            deletePrueba: async function(){
+            updatePrueba: async function(){
                 if(localStorage.getItem("tokenRefresh") === null || localStorage.getItem("tokenAccess") === null) {
                     this.$emit("logOut");
                     return;
@@ -162,27 +149,28 @@
 
                 await this.verifyToken();
                 let token  = localStorage.getItem("tokenAccess");
-                let userId = jwt_decode(token).user_id.toString();
+                let userId = jwt_decode(token).user_id;
                 let pruebaId = this.prueba.id;
+                this.nuevos_datos.dep_ips = userId
 
-                axios.delete(
-                        `http://localhost:8000/prueba/delete/${userId}/${pruebaId}/`,
-                        {headers: {'Authorization': `Bearer ${token}`}}
-                    )
-                    .then((result) => {
-                        this.$emit("completedDeletePrueba");
-                        this.getMyPruebasList();
-                    })
-                    .catch((error) => {
-                        if(error.response.status == "401") {
-                            alert("Usted no está autorizado para realizar esta operación.");
-                        }
-                        else if(error.response.status == "500"){
-                            alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
-                        }
-                    })
+                console.log(this.nuevos_datos);
 
-
+                axios.put(
+                    `http://localhost:8000/prueba/update/${userId}/${pruebaId}/`,
+                    this.nuevos_datos,
+                    {headers: {'Authorization': `Bearer ${token}`}}
+                )
+                .then((result) => {
+                    this.$emit('completedUpdatePrueba');
+                })
+                .catch((error) => {
+                    if(error.response.status == "401") {
+                        alert("Usted no está autorizado para realizar esta operación.");
+                    }
+                    else if(error.response.status == "500"){
+                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    }
+                })
             },
 
 
@@ -193,10 +181,16 @@
             this.getPrueba();
         }
     }
+
+
+
 </script>
 
+
 <style>
-    .detailPrueba{
+
+
+    .updatePrueba{
         margin: 0;
         padding: 0%;
         height: 100%;
@@ -205,52 +199,26 @@
         justify-content: center;
         align-items: center;
     }
-    .containerPrueba {
+    .containerUpdatePrueba {
         border: 1px solid #ffffff;
         border-radius: 5px;
-        width: 40%;
+        width: 60%;
         height: 100%;
         display: flex;
         background: #ffffff;
-        text-align-last:center;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        align-content: center;
-        position: relative;
-       
     }
-
-    .containerPrueba form {
-        align-items: center;
-    }
-
-    .containerPrueba h2 {
-        font-size: 25px;
-        color: #0e3063;
-        /* position: relative;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        justify-items: center; */
-    }
-
-    .containerPrueba form select {
-        position: relative;
-        font-size: 20px;
-        /* left: 10%; */
-    }
-
-
-    .detailPrueba h4{
+    .updatePrueba h4{
         color: #0e3063;
         text-align: center;
     }
 
-    .detailPrueba form{
+    .updatePrueba form{
         width: 70%;
     }
-    .detailPrueba input{
+    .updatePrueba input{
         height: 23px;
         width: 100%;
         box-sizing: border-box;
@@ -258,7 +226,7 @@
         margin: 5px 0;
         border: 1px solid #283747;
     }
-    .detailPrueba button{
+    .updatePrueba button{
         width: 100%;
         height: 40px;
         color: #E5E7E9;
@@ -270,94 +238,11 @@
     }
 
 
-    .detailPrueba button:hover{
+    .updatePrueba button:hover{
         color: #ffffff;
         background: rgb(179, 63, 54);
         border: 1px solid #283747;
     }
 
-    .informacionPrueba {
-        border: 1px solid #ffffff;
-        border-radius: 5px;
-        position: relative;
-        width: 40%;
-        height: 100%;
-        display: flex;
-        background: #ffffff;
-        flex-direction: column;
-        top: 0%;
-        right: 0%;
-        left: 5%;
-        align-items: center;
-    }
-
-    .informacionPrueba h2{
-        top: 15%;
-        font-size: 25px;
-        color: #0d5f74;
-        position: relative;
-        align-content: center;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .informacionPruebas {
-        border: 1px solid #ffffff;
-        border-radius: 5px;
-        position: relative;
-        width: 40%;
-        height: 100%;
-        display: flex;
-        background: #ffffff;
-        flex-direction: column;
-        top: 0%;
-        right: 0%;
-        left: 5%;
-        align-items: center;    
-    }
-
-    .informacionPruebas h2{
-        font-size: 25px;
-        color: #0e3063;
-    }
-
-    .informacionPruebas table {
-        width: 80%;
-        height: 80%;
-        top: 0;
-        display: block;
-        overflow-x: auto;
-        position: relative;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
-    .informacionPruebas td, .informacionPruebas th {
-        border: 1px solid black;
-        padding: 8px;
-        font-size: 18px;
-        
-        
-    }
-
-    .informacionPruebas tr:nth-child(even){
-        background-color: #e0dede;
-        
-    }
-
-    .informacionPruebas tr:hover {
-        background-color: rgb(172, 172, 172);
-    }
-
-    .informacionPruebas th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: center;
-        background-color: #04AA6D;
-        color: white;
-    }
 
 </style>

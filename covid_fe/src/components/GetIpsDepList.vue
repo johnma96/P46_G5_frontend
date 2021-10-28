@@ -155,9 +155,6 @@
         text-align: center;
     }
 
-    .List form{
-        width: 70%;
-    }
     .List input{
         height: 23px;
         width: 100%;
@@ -166,24 +163,6 @@
         margin: 5px 0;
         border: 1px solid #283747;
     }
-    .List button{
-        width: 100%;
-        height: 40px;
-        color: #E5E7E9;
-        background: #1a9aa3;
-        border: 1px solid #E5E7E9;
-        border-radius: 5px;
-        padding: 10px 25px;
-        margin: 5px 0 25px 0;
-    }
-
-
-    .List button:hover{
-        color: #ffffff;
-        background: rgb(179, 63, 54);
-        border: 1px solid #283747;
-    }
-
 
     .informacion {
         border: 1px solid #ffffff;
