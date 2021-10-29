@@ -9,10 +9,22 @@
                 <br>
                 <input type="password" v-model="user.password" placeholder="Contraseña">
                 <br>
-                <input type="number" min="0" v-model="user.departamento" placeholder="Departamento">
+                <!-- <input type="number" min="0" v-model="user.departamento" placeholder="Departamento">
+                <br> -->
+                <select v-model="user.departamento">
+                    <option v-for="departamento in myDepartamento" :key="departamento.id" :value="departamento.id">{{ departamento.id }} - {{ departamento.name }}</option>   
+                </select>
                 <br>
-                <input type="number" min="0" v-model="user.ips" placeholder="IPS">
+                <select v-model="user.ips">
+                    <option v-for="ips in myIps" :key="ips.id" :value="ips.id">{{ ips.id }} - {{ ips.name }}</option>   
+                </select>
                 <br>
+                <!-- <select v-model="user.ips">
+                    <option v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">{{ prueba.testDate }} - Prueba {{ prueba.id }}</option>   
+                </select> -->
+                <!-- <br> -->
+                <!-- <input type="number" min="0" v-model="user.ips" placeholder="IPS">
+                <br> -->
                 <input type="text" v-model="user.prueba.testDate" placeholder="Fecha realización prueba">
                 <br>
                 <input type="number" min="0" v-model="user.prueba.positiveTests" placeholder="Pruebas positivas">
@@ -45,12 +57,51 @@
                         positiveTests          : "",
                         negativeTests          : "",
                         indeterminateTests     : "",
-                    }
-                }
+                    },
+                },
+                myDepartamento : [],
+                myIps : [],
             }
         },
 
         methods: {
+            getMyDepartamentoList: async function(){
+                axios.get(
+                    `http://localhost:8000/departamento/list/`,
+                    {headers: {}}
+                )
+                .then((result) => {
+                    this.myDepartamento = result.data;
+                })
+                .catch((error) => {
+                    if(error.response.status == "401") {
+                        alert("Usted no está autorizado para realizar esta operación.");
+                    }
+                    else if(error.response.status == "500"){
+                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    }
+                })
+            },
+
+            getMyIpsList: async function(){
+                
+                axios.get(
+                    `http://localhost:8000/ips/list/`,
+                    {headers: {}}
+                )
+                .then((result) => {
+                    this.myIps = result.data;
+                })
+                .catch((error) => {
+                    if(error.response.status == "401") {
+                        alert("Usted no está autorizado para realizar esta operación.");
+                    }
+                    else if(error.response.status == "500"){
+                        alert("La plataforma está presentando problemas.\nIntente de nuevo más tarde.");
+                    }
+                })
+            },
+
             processSignUp: function(){
                 console.log(this.user);
                 axios.post(
@@ -71,7 +122,13 @@
                     alert("ERROR: El registro ha fallado.");
                 });
             }
+        },
+
+        created: async function(){
+            this.getMyDepartamentoList();
+            this.getMyIpsList();
         }
+
     }
 </script>
 
