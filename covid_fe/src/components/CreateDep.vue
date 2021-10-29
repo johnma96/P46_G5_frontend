@@ -105,6 +105,7 @@
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        font-size: 20px;
     }
     .createDepUser button{
         width: 100%;
@@ -115,6 +116,7 @@
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0 25px 0;
+        font-size: 20px;
     }
 
 

@@ -11,6 +11,9 @@ import CreatePrueba                           from './components/CreatePrueba.vu
 import DetailPrueba                           from './components/GetDetailPrueba.vue'
 import IpsDepList                             from './components/GetIpsDepList.vue'
 import UpdatePrueba                           from './components/UpdatePrueba.vue'
+import FilterByIpsDep                         from './components/FilterByIpsDep.vue'
+import FilterByIps                            from './components/FilterByIps.vue'
+import FilterByDepartamento                   from './components/FilterByDepartamento.vue'
 
 const routes = [
   {
@@ -70,7 +73,26 @@ const routes = [
     name: "updatePrueba",
     component: UpdatePrueba
   },
+
+  {
+    path: '/Prueba/filter',
+    name: "filterByIpsDep",
+    component: FilterByIpsDep
+  },
+
+  {
+    path: '/Prueba/filterByIps',
+    name: "filterByIps",
+    component: FilterByIps
+  },
+
+  {
+    path: '/Prueba/filterByDepartamento',
+    name: "filterByDepartamento",
+    component: FilterByDepartamento
+  },
 ]
+
 
 const router = createRouter({
   history: createWebHashHistory(),

@@ -78,33 +78,33 @@
           </li>
           <li>
             <a>
-              <i class="fa fa-font fa-2x"></i>
+              <i class="fa fa-refresh fa-2x"></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadUpdatePrueba">
                 Actualizar una prueba
               </span>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a>
               <i class="fa fa-table fa-2x"></i>
-              <span class="nav-text">
-                Tables
+              <span class="nav-text" v-if="isAuth" v-on:click="loadFilterByIpsDep">
+                Filtros
               </span>
             </a>
-          </li>
+          </li> -->
           <li>
             <a>
               <i class="fa fa-map-marker fa-2x"></i>
-              <span class="nav-text">
-                Maps
+              <span class="nav-text" v-if="isAuth" v-on:click="loadFilterByIps">
+                Filtrar pruebas por IPS
               </span>
             </a>
           </li>
           <li>
-            <a>
+            <a> 
               <i class="fa fa-info fa-2x"></i>
-              <span class="nav-text">
-                Documentation
+              <span class="nav-text" v-if="isAuth" v-on:click="loadFilterByDepartamento">
+                Filtrar pruebas por departamento
               </span>
             </a>
           </li>
@@ -122,6 +122,9 @@
 
 
 <script>
+  import Datepicker from 'vue3-date-time-picker';
+  import 'vue3-date-time-picker/dist/main.css'
+
   export default{
     name: 'App',
 
@@ -191,7 +194,19 @@
 
       loadUpdatePrueba: function(){
         this.$router.push({name: "updatePrueba"});
-      },   
+      },
+      
+      loadFilterByIpsDep: function(){
+        this.$router.push({name: "filterByIpsDep"});
+      },
+
+      loadFilterByIps: function(){
+        this.$router.push({name: "filterByIps"});
+      },
+
+       loadFilterByDepartamento: function(){
+        this.$router.push({name: "filterByDepartamento"});
+      },
 
       completedLogIn: function(data){
         localStorage.setItem('username', data.username);
@@ -291,7 +306,7 @@
   .main-component{
     margin: 0;
     padding: 0;
-    height: 75vh;
+    height: 82vh;
     margin: 0%;
     padding: 0%;
     background: #acacac ;
@@ -307,13 +322,14 @@
   }
 
   .footer{
-    margin: 0;
+    margin: 0px;
     padding: 0;
     width: 100%;
-    height: 15vh;
-    min-height: 20px;
+    height: 8vh;
+    /* min-height: 10px; */
     background-color: #313131;
     color: #ffffff;
+    position: relative;
   }
   .footer h4{
     margin: 0;

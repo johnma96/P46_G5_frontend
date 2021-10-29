@@ -3,7 +3,7 @@
         <div class="containerUpdatePrueba">
             <h4>Seleccione la prueba que desea actualizar:.</h4>
             <form v-on:submit.prevent="getPrueba">
-                <select v-model="prueba.id">
+                <select v-model="prueba.id" class="sel">
                     <option v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">{{ prueba.testDate }} - Prueba {{ prueba.id }}</option>   
                 </select>
             </form>
@@ -225,6 +225,7 @@ export default{
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        font-size: 20px;
     }
     .updatePrueba button{
         width: 100%;
@@ -235,6 +236,7 @@ export default{
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0 25px 0;
+        font-size: 20px;
     }
 
 
@@ -242,6 +244,11 @@ export default{
         color: #ffffff;
         background: rgb(179, 63, 54);
         border: 1px solid #283747;
+    }
+
+    .sel {
+        width: 100%;
+        font-size: 20px;
     }
 
 
