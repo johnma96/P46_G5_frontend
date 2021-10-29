@@ -84,14 +84,14 @@
               </span>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a>
               <i class="fa fa-table fa-2x"></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadFilterByIpsDep">
                 Filtros
               </span>
             </a>
-          </li>
+          </li> -->
           <li>
             <a>
               <i class="fa fa-map-marker fa-2x"></i>

@@ -12,8 +12,8 @@
 
             <h2 v-if="table">Filtar por fecha</h2>
             <form v-on:submit.prevent="filtrarFecha"  v-if="table">
-                <Datepicker v-model="datei" ></Datepicker>
-                <Datepicker v-model="datef" ></Datepicker>
+                <Datepicker v-model="datei" placeholder="Fecha inicial"></Datepicker>
+                <Datepicker v-model="datef" placeholder="Fecha final"></Datepicker>
                 <button type="submit">Filtrar</button>
             </form>
  
