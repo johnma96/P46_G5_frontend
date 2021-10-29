@@ -79,12 +79,8 @@
                         this.$emit("logOut");
                     })
             },
-
-
         },
-
         created:async function(){
-
         },
     }
 </script>
@@ -100,6 +96,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .containerCreatePrueba {
         border: 1px solid #ffffff;
         border-radius: 5px;
@@ -111,6 +108,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .createPrueba h4{
         color: #0e3063;
         text-align: center;
@@ -119,6 +117,7 @@
     .createPrueba form{
         width: 70%;
     }
+
     .createPrueba input{
         height: 23px;
         width: 100%;
@@ -128,6 +127,7 @@
         border: 1px solid #283747;
         font-size: 20px;
     }
+
     .createPrueba button{
         width: 100%;
         height: 40px;
@@ -139,7 +139,6 @@
         margin: 5px 0 25px 0;
         font-size: 20px;
     }
-
 
     .createPrueba button:hover{
         color: #ffffff;
