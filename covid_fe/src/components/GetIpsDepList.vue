@@ -185,7 +185,6 @@
     }
 
     .informacion table {
-        width: 80%;
         height: 80%;
         top: 0;
         display: block;
@@ -193,7 +192,6 @@
         position: relative;
         border-collapse: collapse;
         text-align: center;
-        margin: auto
 
     }
 

@@ -11,14 +11,18 @@
                 <br>
                 <!-- <input type="number" min="0" v-model="user.departamento" placeholder="Departamento">
                 <br> -->
-                <select v-model="user.departamento">
-                    <option v-for="departamento in myDepartamento" :key="departamento.id" :value="departamento.id">{{ departamento.id }} - {{ departamento.name }}</option>   
-                </select>
-                <br>
-                <select v-model="user.ips">
-                    <option v-for="ips in myIps" :key="ips.id" :value="ips.id">{{ ips.id }} - {{ ips.name }}</option>   
-                </select>
-                <br>
+                <div class="select">
+                    <select v-model="user.departamento" class="sel">
+                        <option value="" disabled selected hidden id="default">Selecciona tu departamento</option>
+                        <option v-for="departamento in myDepartamento" :key="departamento.id" :value="departamento.id" >{{ departamento.id }} - {{ departamento.name }}</option>   
+                    </select>
+                    <select v-model="user.ips" class="sel">
+                        <option value="" disabled selected hidden id="default">Selecciona tu ips</option>
+                        <option v-for="ips in myIps" :key="ips.id" :value="ips.id">{{ ips.id }} - {{ ips.name }}</option>   
+                    </select>
+                    <br>
+                </div>
+                
                 <!-- <select v-model="user.ips">
                     <option v-for="prueba in myPruebas" :key="prueba.id" :value="prueba.id">{{ prueba.testDate }} - Prueba {{ prueba.id }}</option>   
                 </select> -->
@@ -153,6 +157,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .signUpUser h4{
         color: #0e3063;
         text-align: center;
@@ -168,6 +173,8 @@
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        font-size: 20px;
+
     }
     .signUpUser button{
         width: 100%;
@@ -178,12 +185,33 @@
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0 25px 0;
+        font-size: 20px;
     }
-
 
     .signUpUser button:hover{
         color: #ffffff;
         background: rgb(179, 63, 54);
         border: 1px solid #283747;
     }
+
+    #default {
+        color: gray;
+    }
+
+    .sel {
+        width: 100%;
+        font-size: 20px;
+    }
+
+
+
+    .select option{
+        font-size: 20px;
+        display: flex;
+        color: black;
+        padding: 0 10px;
+        lef: 10px;
+    }
+
+
 </style>
