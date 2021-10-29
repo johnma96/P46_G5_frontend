@@ -84,14 +84,14 @@
               </span>
             </a>
           </li>
-          <li>
+          <!-- <li>
             <a>
               <i class="fa fa-table fa-2x"></i>
               <span class="nav-text" v-if="isAuth" v-on:click="loadFilterByIpsDep">
                 Filtros
               </span>
             </a>
-          </li>
+          </li> -->
           <li>
             <a>
               <i class="fa fa-map-marker fa-2x"></i>
@@ -306,7 +306,7 @@
   .main-component{
     margin: 0;
     padding: 0;
-    height: 75vh;
+    height: 82vh;
     margin: 0%;
     padding: 0%;
     background: #acacac ;
@@ -322,13 +322,14 @@
   }
 
   .footer{
-    margin: 0;
+    margin: 0px;
     padding: 0;
     width: 100%;
-    height: 15vh;
-    min-height: 20px;
+    height: 8vh;
+    /* min-height: 10px; */
     background-color: #313131;
     color: #ffffff;
+    position: relative;
   }
   .footer h4{
     margin: 0;

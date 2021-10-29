@@ -15,8 +15,8 @@
 
             <h2 v-if="table">Filtar por fecha</h2>
             <form v-on:submit.prevent="filtrarFecha"  v-if="table">
-                <Datepicker v-model="datei" ></Datepicker>
-                <Datepicker v-model="datef" ></Datepicker>
+                <Datepicker v-model="datei" placeholder="Fecha inicial"></Datepicker>
+                <Datepicker v-model="datef" placeholder="Fecha final"></Datepicker>
                 <button type="submit">Filtrar</button>
             </form>
         </div>   
@@ -300,6 +300,7 @@
     .containerPrueba form select {
         position: relative;
         font-size: 20px;
+        width: 100%;
         /* left: 10%; */
     }
 
@@ -319,6 +320,7 @@
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        font-size: 20px;
     }
     .detailPrueba button{
         width: 100%;
@@ -329,6 +331,7 @@
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0 25px 0;
+        font-size: 20px;
     }
 
 
@@ -354,8 +357,8 @@
     }
 
     .informacionPrueba h2{
-        top: 15%;
-        font-size: 25px;
+        top: 0%;
+        font-size: 40px;
         color: #0d5f74;
         position: relative;
         align-content: center;
@@ -364,6 +367,11 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+    }
+
+    .informacionPrueba h2 span {
+        color: black;
+        font-size: 22px;
     }
 
     .informacionPruebas {

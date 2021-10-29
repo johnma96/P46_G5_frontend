@@ -1,7 +1,7 @@
 <template>
     <div class="createPrueba">
         <div class="containerCreatePrueba">
-            <h4>A continuación ingrese los datos de las pruebas Covid19 procesadas en una fecha.</h4>
+            <h4>Ingrese los datos de las pruebas Covid-19 procesadas.</h4>
             <form v-on:submit.prevent="processPrueba">
                 <input type="text" v-model="prueba.prueba_data.testDate" placeholder="Fecha realización prueba">
                 <br>
@@ -126,6 +126,7 @@
         padding: 10px 20px;
         margin: 5px 0;
         border: 1px solid #283747;
+        font-size: 20px;
     }
     .createPrueba button{
         width: 100%;
@@ -136,6 +137,7 @@
         border-radius: 5px;
         padding: 10px 25px;
         margin: 5px 0 25px 0;
+        font-size: 20px;
     }
 
 
